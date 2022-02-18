@@ -5,29 +5,21 @@
 // Copyright (c) 2011 The LevelDB Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file. See the AUTHORS file for names of contributors.
-//
-// An iterator yields a sequence of key/value pairs from a source.
-// The following class defines the interface.  Multiple implementations
-// are provided by this library.  In particular, iterators are provided
-// to access the contents of a Table or a DB.
-//
-// Multiple threads can invoke const methods on an Iterator without
-// external synchronization, but if any of the threads may call a
-// non-const method, all threads accessing the same Iterator must use
-// external synchronization.
 
 #pragma once
 
-namespace rocksdb {
+#include "rocksdb/rocksdb_namespace.h"
+
+namespace ROCKSDB_NAMESPACE {
 
 class Cleanable {
  public:
   Cleanable();
-  ~Cleanable();
-
   // No copy constructor and copy assignment allowed.
   Cleanable(Cleanable&) = delete;
   Cleanable& operator=(Cleanable&) = delete;
+
+  ~Cleanable();
 
   // Move constructor and move assignment is allowed.
   Cleanable(Cleanable&&);
@@ -38,7 +30,7 @@ class Cleanable {
   //
   // Note that unlike all of the preceding methods, this method is
   // not abstract and therefore clients should not override it.
-  typedef void (*CleanupFunction)(void* arg1, void* arg2);
+  using CleanupFunction = void (*)(void* arg1, void* arg2);
   void RegisterCleanup(CleanupFunction function, void* arg1, void* arg2);
   void DelegateCleanupsTo(Cleanable* other);
   // DoCleanup and also resets the pointers for reuse
@@ -76,4 +68,4 @@ class Cleanable {
   }
 };
 
-}  // namespace rocksdb
+}  // namespace ROCKSDB_NAMESPACE
